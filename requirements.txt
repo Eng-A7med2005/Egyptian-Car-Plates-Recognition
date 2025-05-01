@@ -1,8 +1,4 @@
-gdown
-streamlit
 opencv-python-headless
 torch
-numpy
-paddleocr
 ultralytics
-paddlepaddle
+gdown

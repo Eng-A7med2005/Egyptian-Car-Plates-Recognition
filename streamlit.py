@@ -35,9 +35,9 @@ if uploaded_image is not None:
 
     # عرض النتائج (رقم اللوحة)
     st.subheader("Detected Plate Number:")
-    for result in results.pandas().xywh[0].itertuples():
-        st.write(f"Plate: {result.name}")
-        
+    for result in results[0].names:  # عرض أسماء الكائنات المكتشفة
+        st.write(f"Plate: {result}")
+
     # رسم المربعات حول اللوحات على الصورة
     img_with_boxes = results[0].plot()
 

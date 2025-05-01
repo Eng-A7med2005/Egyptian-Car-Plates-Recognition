@@ -1,6 +1,8 @@
-streamlit
-ultralytics
-opencv-python-headless
 gdown
-numpy
+streamlit
+opencv-python
 torch
+numpy
+paddleocr
+ultralytics
+paddlepaddle

@@ -6,3 +6,4 @@ numpy
 gdown
 Pillow
 os
+pip

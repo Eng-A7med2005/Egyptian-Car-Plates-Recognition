@@ -1,7 +1,8 @@
 streamlit
 torch
 ultralytics
-gdown
+opencv-python-headless
 numpy
+gdown
 Pillow
 os

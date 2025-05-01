@@ -2,6 +2,7 @@ import gdown
 import streamlit as st
 import cv2
 import torch
+import numpy as np  # إضافة numpy هنا
 from ultralytics import YOLO
 
 # تحميل النموذج من Google Drive باستخدام gdown

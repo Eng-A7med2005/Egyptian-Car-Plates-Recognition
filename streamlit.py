@@ -1,19 +1,24 @@
 import streamlit as st
 import torch
 import numpy as np
+import gdown
 from PIL import Image
 from ultralytics import YOLO
 
-# مسار النموذج الأول على Google Drive
+# رابط تحميل النموذج الأول من Google Drive
 plate_model_url = 'https://drive.google.com/uc?id=12tRfc_-nOkqMO9bdwpV8P8MFamwgtR2e'
-plate_model_path = 'yolo11m_car_plate_trained.pt'
 
-# مسار النموذج الثاني المحلي
+# رابط تحميل النموذج الثاني (يمكنك استبداله برابط محلي إذا كنت تمتلكه)
+ocr_model_url = 'path_to_local_ocr_model.pt'  # ضع مسار النموذج الثاني هنا
+
+# مسارات تحميل الملفات
+plate_model_path = 'yolo11m_car_plate_trained.pt'
 ocr_model_path = 'yolo11m_car_plate_ocr1.pt'
 
-# تحميل النموذج الأول فقط من Google Drive
-import gdown
+# تنزيل النماذج من Google Drive (النموذج الأول فقط من Google Drive، الثاني إذا كان محليًا)
 gdown.download(plate_model_url, plate_model_path, quiet=False)
+# إذا كان لديك النموذج الثاني محليًا:
+# gdown.download(ocr_model_url, ocr_model_path, quiet=False)
 
 # تحميل النماذج باستخدام YOLO
 plate_detector = YOLO(plate_model_path)
@@ -40,7 +45,7 @@ st.title("🚘 Car Plate Recognition Using Two YOLOv8 Models")
 uploaded_image = st.file_uploader("Upload a Car Image", type=["jpg", "jpeg", "png"])
 
 if uploaded_image is not None:
-    # تحميل الصورة باستخدام PIL
+    # تحميل الصورة باستخدام PIL بدلاً من OpenCV
     image = Image.open(uploaded_image).convert("RGB")
     rgb_image = np.array(image)
 

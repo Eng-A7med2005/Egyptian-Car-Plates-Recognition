@@ -6,15 +6,15 @@ from PIL import Image
 from ultralytics import YOLO
 
 # تحميل النموذج الأول من Google Drive
-plate_model_url = 'https://drive.google.com/uc?id=12tRfc_-nOkqMO9bdwpV8P8MFamwgtR2e'
-
+plate_model_url = 'https://drive.google.com/file/d/1oBW_5JW2jJecE-tzyS9koSluWc9nkVrr'
+ocr_model_url = 'https://drive.google.com/file/d/1VM7PZIK-FFZWi1xY1vgrEsmhlzrDPzok'
 # مسارات تحميل الملفات
 plate_model_path = 'yolo11m_car_plate_trained.pt'
 ocr_model_path = 'yolo11m_car_plate_ocr1.pt'  # النموذج الثاني موجود محليًا
 
 # تنزيل النموذج الأول
 gdown.download(plate_model_url, plate_model_path, quiet=False)
-
+gdown.download(ocr_model_url, ocr_model_path, quiet=False)
 # تحميل النماذج
 plate_detector = YOLO(plate_model_path)
 ocr_model = YOLO(ocr_model_path)

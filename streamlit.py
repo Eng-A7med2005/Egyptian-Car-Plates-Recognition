@@ -1,16 +1,18 @@
 import streamlit as st
 import torch
 import numpy as np
-import gdown
 from PIL import Image
 from ultralytics import YOLO
 
-# تحميل النموذج الأول من Google Drive
+# مسار النموذج الأول على Google Drive
 plate_model_url = 'https://drive.google.com/uc?id=12tRfc_-nOkqMO9bdwpV8P8MFamwgtR2e'
 plate_model_path = 'yolo11m_car_plate_trained.pt'
-ocr_model_path = 'yolo11m_car_plate_ocr1.pt'  # النموذج الثاني محلي
 
-# تنزيل النموذج الأول فقط
+# مسار النموذج الثاني المحلي
+ocr_model_path = 'yolo11m_car_plate_ocr1.pt'
+
+# تحميل النموذج الأول فقط من Google Drive
+import gdown
 gdown.download(plate_model_url, plate_model_path, quiet=False)
 
 # تحميل النماذج باستخدام YOLO

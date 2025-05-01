@@ -3,6 +3,7 @@ import streamlit as st
 import cv2
 import torch
 import numpy as np
+from paddleocr import PaddleOCR
 from ultralytics import YOLO
 
 # تحميل النموذج من Google Drive باستخدام gdown
@@ -12,6 +13,9 @@ gdown.download(url, output, quiet=False)
 
 # تحميل النموذج المدرب من الملف
 model = YOLO('yolo11m_car_plate_ocr.pt')
+
+# تهيئة PaddleOCR لدعم اللغة العربية
+ocr = PaddleOCR(use_angle_cls=True, lang='ar')  # دعم اللغة العربية
 
 # دالة لمعالجة الصورة
 def process_image(image):
@@ -40,14 +44,16 @@ if uploaded_image is not None:
         x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
         cropped_plate = processed_image[y1:y2, x1:x2]  # قص الجزء الذي يحتوي على اللوحة
 
-        # يمكن هنا استخدام نموذج OCR لاستخراج النص من الصورة المقصوصة (إذا كنت تستخدم Tesseract أو غيره)
-        # مثال لاستخدام Tesseract (تحتاج إلى تثبيت Tesseract)
-        # import pytesseract
-        # plate_text = pytesseract.image_to_string(cropped_plate, config='--psm 8')
+        # استخدام PaddleOCR لاستخراج الأرقام من الجزء المقصوص
+        result = ocr.ocr(cropped_plate, cls=True)
 
-        # هنا يمكن عرض الأرقام المكتشفة
+        # عرض الأرقام المكتشفة
+        for line in result[0]:
+            text = line[1]  # استخراج النص
+            st.write(f"Plate Number: {text}")
+
+        # عرض الصورة المقصوصة التي تحتوي على اللوحة
         st.image(cropped_plate, caption="Detected Plate Region", use_container_width=True)
-        st.write("Plate Number: (Here you would display the OCR result)")
 
     # رسم المربعات حول اللوحات على الصورة
     img_with_boxes = results[0].plot()

@@ -1,43 +1,44 @@
 import gdown
-import os
 import streamlit as st
 import cv2
-from PIL import Image
+import torch
 from ultralytics import YOLO
 
-# =======================
-# تحميل النموذج من Google Drive لو مش موجود
-# =======================
-model_path = 'yolo11m_car_plate_ocr.pt'
+# تحميل النموذج من Google Drive باستخدام gdown
+url = 'https://drive.google.com/uc?id=12tRfc_-nOkqMO9bdwpV8P8MFamwgtR2e'
+output = 'yolo11m_car_plate_ocr.pt'
+gdown.download(url, output, quiet=False)
 
-if not os.path.exists(model_path):
-    url = 'https://drive.google.com/file/d/12tRfc_-nOkqMO9bdwpV8P8MFamwgtR2e'  # <-- غيّر الـ ID هنا
-    st.write("⏳ Downloading model...")
-    gdown.download(url, model_path, quiet=False)
-    st.success("✅ Model downloaded successfully!")
+# تحميل النموذج المدرب من الملف
+model = YOLO('yolo11m_car_plate_ocr.pt')
 
-# =======================
-# تحميل النموذج
-# =======================
-model = YOLO(model_path)
+# دالة لمعالجة الصورة
+def process_image(image):
+    img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # تحويل الصورة من BGR إلى RGB
+    return img
 
-# =======================
-# Streamlit UI
-# =======================
-st.title("🚘 Arabic Car Plate Recognition")
-uploaded_file = st.file_uploader("Upload a car image", type=['jpg', 'png', 'jpeg'])
+# واجهة رفع الصورة في Streamlit
+st.title("Car Plate Number Recognition")
+uploaded_image = st.file_uploader("Upload a Car Image", type=["jpg", "png", "jpeg"])
 
-if uploaded_file:
-    image = Image.open(uploaded_file).convert("RGB")
-    st.image(image, caption='Uploaded Image', use_column_width=True)
+if uploaded_image is not None:
+    # قراءة الصورة
+    image = cv2.imdecode(np.frombuffer(uploaded_image.read(), np.uint8), 1)
+    processed_image = process_image(image)
 
-    # حفظ مؤقت للصورة
-    temp_path = 'temp_image.jpg'
-    image.save(temp_path)
+    # عرض الصورة الأصلية
+    st.image(processed_image, caption="Uploaded Image", use_column_width=True)
 
-    # التنبؤ
-    results = model.predict(source=temp_path, conf=0.25)
-    result_image = results[0].plot()
+    # تنفيذ التنبؤ باستخدام YOLO على الصورة المرفوعة
+    results = model.predict(processed_image, conf=0.25)
 
-    # عرض النتائج
-    st.image(result_image, caption="Detected Car Plate", use_column_width=True)
+    # عرض النتائج (رقم اللوحة)
+    st.subheader("Detected Plate Number:")
+    for result in results.pandas().xywh[0].itertuples():
+        st.write(f"Plate: {result.name}")
+        
+    # رسم المربعات حول اللوحات على الصورة
+    img_with_boxes = results[0].plot()
+
+    # عرض الصورة مع المربعات المرسومة
+    st.image(img_with_boxes, caption="Image with Detected Plate", use_column_width=True)

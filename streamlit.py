@@ -1,12 +1,12 @@
 import streamlit as st
-import cv2
 import torch
 import numpy as np
 import gdown
+from PIL import Image
 from ultralytics import YOLO
 
 # تحميل النموذجين من Google Drive
-plate_model_url = 'https://drive.google.com/uc?id=12tRfc_-nOkqMO9bdwpV8P8MFamwgtR2e'  # استخدم الرابط المباشر من Google Drive
+plate_model_url = 'https://drive.google.com/uc?id=12tRfc_-nOkqMO9bdwpV8P8MFamwgtR2e'
 ocr_model_url = 'رابط Google Drive للنموذج الثاني هنا'
 
 # مسارات تحميل الملفات
@@ -22,50 +22,17 @@ ocr_model = YOLO(ocr_model_path)
 
 # قاموس لتحويل الحروف اللاتينية إلى حروف عربية
 char_map = {
-    'meem': 'م',  # meem -> م
-    'yaa': 'ي',   # yaa -> ي
-    'alef': 'ا',  # alef -> ا
-    'baa': 'ب',   # baa -> ب
-    'taa': 'ت',   # taa -> ت
-    'thaa': 'ث',  # thaa -> ث
-    'jeem': 'ج',  # jeem -> ج
-    'haa': 'ح',   # haa -> ح
-    'khaa': 'خ',  # khaa -> خ
-    'dal': 'د',   # dal -> د
-    'dhal': 'ذ',  # dhal -> ذ
-    'raa': 'ر',   # raa -> ر
-    'zay': 'ز',   # zay -> ز
-    'seen': 'س',  # seen -> س
-    'sheen': 'ش', # sheen -> ش
-    'saad': 'ص',  # saad -> ص
-    'daad': 'ض',  # daad -> ض
-    'taa': 'ط',   # taa -> ط
-    'thaa': 'ظ',  # thaa -> ظ
-    'ain': 'ع',   # ain -> ع
-    'ghain': 'غ', # ghain -> غ
-    'fa': 'ف',    # fa -> ف
-    'qaf': 'ق',   # qaf -> ق
-    'kaf': 'ك',   # kaf -> ك
-    'lam': 'ل',   # lam -> ل
-    'meem': 'م',  # meem -> م
-    'noon': 'ن',  # noon -> ن
-    'ha': 'ه',    # ha -> ه
-    'waw': 'و',   # waw -> و
-    'yaa': 'ي'    # yaa -> ي
+    'meem': 'م', 'yaa': 'ي', 'alef': 'ا', 'baa': 'ب', 'taa': 'ت', 'thaa': 'ث',
+    'jeem': 'ج', 'haa': 'ح', 'khaa': 'خ', 'dal': 'د', 'dhal': 'ذ', 'raa': 'ر',
+    'zay': 'ز', 'seen': 'س', 'sheen': 'ش', 'saad': 'ص', 'daad': 'ض', 'ain': 'ع',
+    'ghain': 'غ', 'fa': 'ف', 'qaf': 'ق', 'kaf': 'ك', 'lam': 'ل', 'noon': 'ن',
+    'ha': 'ه', 'waw': 'و'
 }
 
 # قاموس لتحويل الأرقام اللاتينية إلى أرقام عربية
 number_map = {
-    '0': '٠',
-    '1': '١',
-    '2': '٢',
-    '3': '٣',
-    '4': '٤',
-    '5': '٥',
-    '6': '٦',
-    '7': '٧',
-    '8': '٨',
-    '9': '٩',
+    '0': '٠', '1': '١', '2': '٢', '3': '٣', '4': '٤',
+    '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩',
 }
 
 # واجهة Streamlit
@@ -74,9 +41,9 @@ st.title("🚘 Car Plate Recognition Using Two YOLOv8 Models")
 uploaded_image = st.file_uploader("Upload a Car Image", type=["jpg", "jpeg", "png"])
 
 if uploaded_image is not None:
-    file_bytes = np.frombuffer(uploaded_image.read(), np.uint8)
-    image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-    rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    # تحميل الصورة باستخدام PIL بدلاً من OpenCV
+    image = Image.open(uploaded_image).convert("RGB")
+    rgb_image = np.array(image)
 
     st.image(rgb_image, caption="Uploaded Image", use_column_width=True)
 
@@ -105,17 +72,10 @@ if uploaded_image is not None:
 
             detected_items.sort(key=lambda x: x[0])
 
-            # استخدام القاموس لتحويل النص من الحروف اللاتينية إلى الحروف العربية
+            # تحويل النص من الحروف اللاتينية إلى العربية
             plate_text = ''.join([char_map.get(item[1], item[1]) for item in detected_items])
-
-            # تحويل الأرقام إلى أرقام عربية
             plate_text = ''.join([number_map.get(char, char) for char in plate_text])
-
-            # إضافة مسافة بين كل حرف ورقم
-            plate_text = ' '.join([char for char in plate_text])
-
-            # عكس النص بحيث يظهر بشكل صحيح
-            plate_text = ' '.join(reversed(plate_text.split()))
+            plate_text = ' '.join(reversed(list(plate_text)))
 
             # عرض النتائج
             st.image(plate_crop, caption=f"Plate Region #{i+1}", use_column_width=True)

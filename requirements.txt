@@ -1,4 +1,6 @@
-opencv-python-headless
+streamlit
 torch
 ultralytics
 gdown
+numpy
+Pillow

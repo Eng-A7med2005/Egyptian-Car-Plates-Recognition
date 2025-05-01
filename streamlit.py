@@ -4,7 +4,7 @@ import numpy as np
 import gdown
 from PIL import Image
 from ultralytics import YOLO
-https://drive.google.com/uc?id=
+
 # تحميل النموذج الأول من Google Drive
 plate_model_url = 'https://drive.google.com/uc?id=1oBW_5JW2jJecE-tzyS9koSluWc9nkVrr'
 ocr_model_url = 'https://drive.google.com/uc?id=1VM7PZIK-FFZWi1xY1vgrEsmhlzrDPzok'

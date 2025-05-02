@@ -15,7 +15,7 @@ ocr_model = YOLO(ocr_model_path)
 char_map = {
     'meem': 'م',  # meem -> م
     'yaa': 'ي',   # yaa -> ي
-    'alif': 'ا',  # alef -> ا
+    'alif': 'أ',  # alef -> ا
     'baa': 'ب',   # baa -> ب
     'taa': 'ت',   # taa -> ت
     'thaa': 'ث',  # thaa -> ث

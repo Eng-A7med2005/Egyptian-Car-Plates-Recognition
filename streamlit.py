@@ -41,7 +41,7 @@ char_map = {
     'meem': 'م',  # meem -> م
     'noon': 'ن',  # noon -> ن
     'haa': 'ه',    # ha -> ه
-    'waaw': 'و',   # waw -> و
+    'waw': 'و',   # waw -> و
     'yaa': 'ي'    # yaa -> ي
 }
 

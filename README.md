@@ -3,13 +3,13 @@ LINK : https://egyptian-car-plates-recognition-aivolution-team.streamlit.app/
 
 Egyptian Car Plate Recognition System
 
-🔍 Problem Statement  
+# 🔍 Problem Statement  
 - Collect and/or generate sufficient data  
 - Detect and extract license plates  
 - Recognize characters (Arabic and Latin letters, Eastern Arabic numerals)  
 - Deliver a fast, accurate, and easy-to-deploy solution  
 
-🧠 Solution Overview  
+# 🧠 Solution Overview  
 Our system is built in two main stages:
 
 1. **License Plate Detection (Object Detection)**  
@@ -22,10 +22,10 @@ Our system is built in two main stages:
    - **Languages Supported**: Arabic + English  
    - **Post-processing**: Clean up output and map Eastern Arabic numerals to Western  
 
-🔁 Pipeline Flow  
+# 🔁 Pipeline Flow  
 `Input Image → YOLOv8 Detection → Plate Cropping → EasyOCR → Final Text Output`
 
-📦 Libraries Used  
+# 📦 Libraries Used  
 - `numpy` – Numerical operations and array handling  
 - `pandas` – Data manipulation and analysis  
 - `matplotlib`, `seaborn`, `plotly.express` – Visualization of data and results  
